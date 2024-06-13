@@ -25,7 +25,7 @@ class ChildVisitFormValidator(VisitFormValidator, CrfOffStudyFormValidator,
     @property
     def caregiver_child_consent_cls(self):
         return django_apps.get_model(self.caregiver_child_consent_model)
-    
+
     @property
     def continued_consent_cls(self):
         return django_apps.get_model(self.continued_consent_model)
@@ -79,16 +79,21 @@ class ChildVisitFormValidator(VisitFormValidator, CrfOffStudyFormValidator,
         information_provider = self.cleaned_data.get('information_provider')
 
         if information_provider == 'self':
-            
+
             if not self.continued_consent_exists:
-                raise ValidationError({'information_provider':'Continued consent not filled, hence the child cannot provide information without a guardian'})
-            
+                raise ValidationError(
+                    {'information_provider':
+                     'Continued consent not filled, hence the child cannot provide information without a guardian'})
+
             if info_source not in ['other_contact', PARTICIPANT]:
-                raise ValidationError({'info_source':'Participant is to provide the information'})
+                raise ValidationError(
+                    {'info_source':
+                     'Participant is to provide the information'})
 
         if info_source != PARTICIPANT and is_present == YES:
-             raise ValidationError({'is_present':
-                                    'Source of information must be from participant if participant is present.'})
+            raise ValidationError(
+                 {'is_present':
+                  'Source of information must be from participant if participant is present.'})
 
     def validate_death(self):
         if (self.cleaned_data.get('survival_status') == DEAD
