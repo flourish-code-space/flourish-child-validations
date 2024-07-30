@@ -1,4 +1,4 @@
-from edc_constants.constants import NO, YES
+from edc_constants.constants import NO, OTHER, YES
 from edc_form_validators import FormValidator
 
 from .form_validator_mixin import ChildFormValidatorMixin
@@ -18,9 +18,9 @@ class ChildTBReferralOutcomeFormValidator(ChildFormValidatorMixin, FormValidator
 
         queryset = self.cleaned_data.get('tests_performed')
         value_checks = check_values(queryset,
-                                    ['Sputum sample', 'other', 'Chest Xray',
-                                     'Stool sample', 'Urine test', 'Skin test',
-                                     'Blood test'])
+                                         ['Sputum sample', 'other', 'Chest Xray',
+                                          'Stool sample', 'Urine test', 'Skin test',
+                                          'Blood test'])
 
         self.m2m_single_selection_if('none', m2m_field='tests_performed')
 
@@ -40,6 +40,59 @@ class ChildTBReferralOutcomeFormValidator(ChildFormValidatorMixin, FormValidator
         self.validate_other_specify(
             field='clinic_name',
             other_specify_field='clinic_name_other'
+        )
+
+        self.m2m_other_specify(
+            m2m_field='tests_performed',
+            field_other='other_test_specify'
+        )
+
+        self.m2m_required_if(
+            response='chest_xray',
+            field='chest_xray_results',
+            m2m_field='tests_performed'
+        )
+
+        self.m2m_required_if(
+            response='sputum_sample',
+            field='sputum_sample_results',
+            m2m_field='tests_performed'
+        )
+
+        self.m2m_required_if(
+            response='stool_sample',
+            field='sputum_sample_results',
+            m2m_field='tests_performed'
+        )
+
+        self.m2m_required_if(
+            response='urine_test',
+            field='urine_test_results',
+            m2m_field='tests_performed'
+        )
+
+        self.m2m_required_if(
+            response='skin_test',
+            field='skin_test_results',
+            m2m_field='tests_performed'
+        )
+
+        self.m2m_required_if(
+            response='blood_test',
+            field='blood_test_results',
+            m2m_field='tests_performed'
+        )
+
+        self.m2m_required_if(
+            response='stool_sample',
+            field='stool_sample_results',
+            m2m_field='tests_performed'
+        )
+
+        self.m2m_required_if(
+            response=OTHER,
+            field='other_test_results',
+            m2m_field='tests_performed'
         )
 
         tb_preventative_fields = [
